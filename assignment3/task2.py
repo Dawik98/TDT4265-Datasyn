@@ -19,27 +19,50 @@ class ExampleModel(nn.Module):
         """
         super().__init__()
         # TODO: Implement this function (Task  2a)
-        num_filters = 32  # Set number of filters in first conv layer
+
+        # conv layer parameters
+        f=5
+        s=1
+        p=2
+
+        # max pool parameters
+        s_pool = 2
+        f_pool = 2
+
+        num_filters1 = 32
+        num_filters2 = 64
+        num_filters3 = 128
+
         self.num_classes = num_classes
         # Define the convolutional layers
         self.feature_extractor = nn.Sequential(
-            nn.Conv2d(
-                in_channels=image_channels,
-                out_channels=num_filters,
-                kernel_size=5,
-                stride=1,
-                padding=2
-            )
+            nn.Conv2d(image_channels, num_filters1, f, s, p),
+            nn.ReLU(),
+            nn.MaxPool2d(f_pool, s_pool),
+            nn.Conv2d(num_filters1, num_filters2, f, s, p),
+            nn.ReLU(),
+            nn.MaxPool2d(f_pool, s_pool),
+            nn.Conv2d(num_filters2, num_filters3, f, s, p),
+            nn.ReLU(),
+            nn.MaxPool2d(f_pool, s_pool)
         )
+        
+
         # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
-        self.num_output_features = 32*32*32
+        self.num_output_features = 4*4*num_filters3
+        num_nodes1 = 64
+
         # Initialize our last fully connected layer
         # Inputs all extracted features from the convolutional layers
         # Outputs num_classes predictions, 1 for each class.
         # There is no need for softmax activation function, as this is
         # included with nn.CrossEntropyLoss
+        
         self.classifier = nn.Sequential(
-            nn.Linear(self.num_output_features, num_classes),
+            nn.Flatten(),
+            nn.Linear(self.num_output_features, num_nodes1),
+            nn.ReLU(),
+            nn.Linear(num_nodes1, self.num_classes)
         )
 
     def forward(self, x):
@@ -49,8 +72,13 @@ class ExampleModel(nn.Module):
             x: Input image, shape: [batch_size, 3, 32, 32]
         """
         # TODO: Implement this function (Task  2a)
+
         batch_size = x.shape[0]
+
+        x = self.feature_extractor(x)
+        x = self.classifier(x)
         out = x
+        
         expected_shape = (batch_size, self.num_classes)
         assert out.shape == (batch_size, self.num_classes),\
             f"Expected output of forward pass to be: {expected_shape}, but got: {out.shape}"
@@ -78,7 +106,7 @@ def create_plots(trainer: Trainer, name: str):
 if __name__ == "__main__":
     # Set the random generator seed (parameters, shuffling etc).
     # You can try to change this and check if you still get the same result! 
-    utils.set_seed(0)
+    utils.set_seed(1)
     epochs = 10
     batch_size = 64
     learning_rate = 5e-2
@@ -94,4 +122,5 @@ if __name__ == "__main__":
         dataloaders
     )
     trainer.train()
+    trainer.get_final_results()
     create_plots(trainer, "task2")

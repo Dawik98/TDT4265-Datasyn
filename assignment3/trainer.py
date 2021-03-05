@@ -6,6 +6,8 @@ import collections
 import utils
 import pathlib
 
+import numpy as np
+
 
 def compute_loss_and_accuracy(
         dataloader: torch.utils.data.DataLoader,
@@ -21,9 +23,9 @@ def compute_loss_and_accuracy(
     Returns:
         [average_loss, accuracy]: both scalar.
     """
-    average_loss = 0
+    loss = 0
     accuracy = 0
-    # TODO: Implement this function (Task  2a)
+    n = 0
     with torch.no_grad():
         for (X_batch, Y_batch) in dataloader:
             # Transfer images/labels to GPU VRAM, if possible
@@ -32,7 +34,15 @@ def compute_loss_and_accuracy(
             # Forward pass the images through our model
             output_probs = model(X_batch)
 
-            # Compute Loss and Accuracy
+            results = torch.eq(Y_batch, torch.argmax(output_probs, dim=1))
+            accuracy += results.float().mean()
+
+            loss += loss_criterion(output_probs, Y_batch)
+            n+=1
+
+    # Compute Loss and Accuracy
+    average_loss = loss / n
+    accuracy = accuracy / n
 
     return average_loss, accuracy
 
@@ -63,8 +73,10 @@ class Trainer:
         print(self.model)
 
         # Define our optimizer. SGD = Stochastich Gradient Descent
-        self.optimizer = torch.optim.SGD(self.model.parameters(),
-                                         self.learning_rate)
+        #self.optimizer = torch.optim.SGD(self.model.parameters(),
+        #                                 self.learning_rate)
+        #self.optimizer = torch.optim.Adagrad(self.model.parameters())                                 
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)                                 
 
         # Load our dataset
         self.dataloader_train, self.dataloader_val, self.dataloader_test = dataloaders
@@ -197,3 +209,14 @@ class Trainer:
                 f"Could not load best checkpoint. Did not find under: {self.checkpoint_dir}")
             return
         self.model.load_state_dict(state_dict)
+
+    def get_final_results(self):
+        self.load_best_model()
+
+        train_loss, train_acc = compute_loss_and_accuracy(self.dataloader_train, self.model, self.loss_criterion)
+        val_loss, val_acc = compute_loss_and_accuracy(self.dataloader_val, self.model, self.loss_criterion)
+        test_loss, test_acc = compute_loss_and_accuracy(self.dataloader_test, self.model, self.loss_criterion)
+
+        print("Train loss: {:.2f}, Train accuracy: {:.2f}".format(train_loss, train_acc))
+        print("Validation loss: {:.2f}, Validation accuracy: {:.2f}".format(val_loss, val_acc))
+        print("Test loss: {:.2f}, Test accuracy: {:.2f}".format(test_loss, test_acc))
