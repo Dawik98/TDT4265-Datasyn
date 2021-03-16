@@ -1,6 +1,8 @@
 
 assignment4/SSD/datasets/
 assignment4/.tmp*
+__pycache__/
 
 *.npy
 *.pkl
+*.pyc
