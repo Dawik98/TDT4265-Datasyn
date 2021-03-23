@@ -24,7 +24,8 @@ def do_train(cfg, model,
              data_loader,
              optimizer,
              checkpointer,
-             arguments):
+             arguments,
+             scheduler = None):
     logger = logging.getLogger("SSD.trainer")
     logger.info("Start training ...")
     meters = MetricLogger()
@@ -89,6 +90,8 @@ def do_train(cfg, model,
                 write_metric(
                     eval_result['metrics'], 'metrics/' + dataset,summary_writer, iteration)
             model.train()  # *IMPORTANT*: change to train mode after eval.
+
+            if scheduler != None: scheduler.step()
 
         if iteration >= cfg.SOLVER.MAX_ITER:
             break
