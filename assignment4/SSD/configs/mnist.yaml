@@ -16,4 +16,4 @@ SOLVER:
     BATCH_SIZE: 16
     LR: 2e-3
 OUTPUT_DIR: 'outputs/basic'
-DATASET_DIR: "datasets"
+DATASET_DIR: "./datasets"
