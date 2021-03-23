@@ -3,17 +3,23 @@ MODEL:
     BACKBONE:
         NAME: 'basic'
         PRETRAINED: False
-        OUT_CHANNELS: [128, 256, 128, 128, 64, 64]
+        #OUT_CHANNELS: [128, 256, 256, 256, 512, 512]
+        OUT_CHANNELS: [128, 128, 256, 128, 128, 512]
         INPUT_CHANNELS: 3
+    PRIORS:
+        FEATURE_MAPS: [[38, 38], [19, 19], [10, 10], [5, 5], [3, 3], [1, 1]]
 INPUT:
     IMAGE_SIZE: [300, 300]
+    #PIXEL_MEAN: [0.485,0.456,0.406]
+    #PIXEL_STD: [0.229,0.224,0.225]
 DATASETS:
     TRAIN: ("mnist_detection_train", "mnist_detection_val")
     TEST: ("mnist_detection_val", )
 SOLVER:
+    #MAX_ITER: 15000
     MAX_ITER: 10000
     GAMMA: 0.1
-    BATCH_SIZE: 16
-    LR: 2e-3
-OUTPUT_DIR: 'outputs/basic'
+    BATCH_SIZE: 10
+    LR: 1e-3
+OUTPUT_DIR: 'outputs/basic85'
 DATASET_DIR: "/work/datasets"
