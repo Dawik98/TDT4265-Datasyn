@@ -1,0 +1,18 @@
+MODEL:
+    NUM_CLASSES: 21
+INPUT:
+    IMAGE_SIZE: [300, 300]
+    #PIXEL_STD: [0.003921569, 0.003921569, 0.003921569] # Set pixel std to 1/255 as VGG is pre-trained on images in range (roughly) [-127.5, 127.5]
+DATASETS:
+    TRAIN: ("rdd2020_train",)
+    TEST: ("rdd2020_val", )
+SOLVER:
+    MAX_ITER: 100000
+    GAMMA: 0.1
+    BATCH_SIZE: 16
+    LR: 5e-4
+  
+OUTPUT_DIR: 'outputs/rdd2020'
+EVAL_STEP: 2500
+MODEL_SAVE_STEP: 2500
+DATASET_DIR: "/work/datasets/"
