@@ -1,6 +1,6 @@
 
-assignment4/SSD/datasets/
-assignment4/SSD/outputs/
+datasets/
+outputs/
 assignment4/.tmp*
 __pycache__/
 
@@ -9,3 +9,4 @@ __pycache__/
 *.pyc
 *.gz
 *.pth
+*.tmp*
