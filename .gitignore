@@ -1,5 +1,6 @@
 
 datasets/
+!**/ssd/data/datasets/
 outputs/
 assignment4/.tmp*
 __pycache__/
