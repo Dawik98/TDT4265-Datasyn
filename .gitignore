@@ -4,6 +4,7 @@ datasets/
 outputs/
 assignment4/.tmp*
 __pycache__/
+core
 
 *.npy
 *.pkl
