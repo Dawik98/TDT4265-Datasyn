@@ -69,7 +69,9 @@ class Model1(nn.Module):
         
 
         # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
-        self.num_output_features = 8*8*num_filters6
+        self.num_output_features = 7*7*num_filters6
+
+
         num_nodes1 = 256
 
         self.classifier = nn.Sequential(
@@ -133,10 +135,16 @@ if __name__ == "__main__":
         model,
         dataloaders
     )
-    train = True
+    train = False
     if train == True:
         trainer.train()
         trainer.get_final_results()
         create_plots(trainer, "test")
     else:
         trainer.get_final_results()
+        layer = 0
+        channels = [0,5,10]
+        img = 'images/img_5.jpg'
+
+        plot_layer(model, layer, channels, img)
+

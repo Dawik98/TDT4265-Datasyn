@@ -61,7 +61,7 @@ def plot_layer(model, layer, channels, image_path):
   #  grid[n].imshow(img,interpolation='none')
 
 
-  fig.savefig("layer_ouputs.png")
+  fig.savefig("images/layer_ouputs.png")
 
 
 def get_activations(in_, layer, model_layers):
