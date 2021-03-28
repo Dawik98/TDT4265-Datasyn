@@ -1,6 +1,7 @@
 
 datasets/
 !**/ssd/data/datasets/
+ed_video/data
 outputs/
 assignment4/.tmp*
 __pycache__/
