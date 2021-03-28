@@ -16,16 +16,16 @@ class Model(torch.nn.Module):
 
         resnet_model = resnet(pretrained = True)
         model = [l for l in resnet_model.children()][:-2]
-        print(model)
+        #print(model)
 
         # freeze layers
-        freeze_layers = [0,1,2]
+        freeze_layers = [0,1,2,3,4,5,6]
         for layer in freeze_layers:
             for param in model[layer].parameters():
                 param.requires_grad = False
 
         # unfreeze layers
-        for param in model[3].parameters():
+        for param in model[7].parameters():
             param.requires_grad = True
 
         self.layer0 = nn.Sequential(
@@ -39,10 +39,6 @@ class Model(torch.nn.Module):
         self.layer2 = model[5]
         self.layer3 = model[6]
         self.layer4 = model[7]
-
-        self.last_block = nn.Sequential(
-            nn.Conv2d(64, 2048, 3, 1, 0)
-        )
 
     def forward(self, x):
         out_features = []
@@ -60,8 +56,8 @@ class Model(torch.nn.Module):
         #x = self.last_block(x)
         #out_features.append(x)
 
-        for i in out_features:
-            print(i.size())
+        #for i in out_features:
+        #    print(i.size())
 
         return tuple(out_features)
 
