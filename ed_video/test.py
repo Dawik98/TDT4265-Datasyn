@@ -142,9 +142,9 @@ if __name__ == "__main__":
         create_plots(trainer, "test")
     else:
         trainer.get_final_results()
-        layer = 0
-        channels = [0,5,10]
-        img = 'images/img_5.jpg'
+        layer = 17
+        channels = [0,1,2]
+        img = 'images/img_5_thin.jpg'
 
         plot_layer(model, layer, channels, img)
 
