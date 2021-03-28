@@ -12,3 +12,6 @@ core
 *.gz
 *.pth
 *.tmp*
+
+# vs_code stuff
+.vscode

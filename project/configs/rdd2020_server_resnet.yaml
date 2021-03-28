@@ -4,9 +4,9 @@ MODEL:
         NAME: 'resnet'
         PRETRAINED: True
         INPUT_CHANNELS: 3
-        OUT_CHANNELS: [64]
+        OUT_CHANNELS: [64, 256, 512, 1024, 2048]
     PRIORS:
-        FEATURE_MAPS: [[1, 1]]
+        FEATURE_MAPS: [[75, 75], [75, 75], [38, 38], [19, 19], [10, 10], ]
 INPUT:
     IMAGE_SIZE: [300, 300]
     PIXEL_STD: [0.229, 0.224, 0.225] 

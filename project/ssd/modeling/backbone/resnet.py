@@ -28,10 +28,17 @@ class Model(torch.nn.Module):
         for param in model[3].parameters():
             param.requires_grad = True
 
-        self.layer1 = model[0]
-        self.layer2 = model[1]
-        self.layer3 = model[2]
-        self.layer4 = model[3]
+        self.layer0 = nn.Sequential(
+            model[0],
+            model[1],
+            model[2],
+            model[3]
+        )
+
+        self.layer1 = model[4]
+        self.layer2 = model[5]
+        self.layer3 = model[6]
+        self.layer4 = model[7]
 
         self.last_block = nn.Sequential(
             nn.Conv2d(64, 2048, 3, 1, 0)
@@ -40,6 +47,8 @@ class Model(torch.nn.Module):
     def forward(self, x):
         out_features = []
 
+        x = self.layer0(x)
+        out_features.append(x)
         x = self.layer1(x)
         out_features.append(x)
         x = self.layer2(x)
