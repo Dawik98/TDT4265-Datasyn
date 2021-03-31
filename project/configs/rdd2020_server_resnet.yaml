@@ -4,9 +4,9 @@ MODEL:
         NAME: 'resnet'
         PRETRAINED: True
         INPUT_CHANNELS: 3
-        OUT_CHANNELS: [64, 256, 512, 1024, 2048]
+        OUT_CHANNELS: [512, 1024, 2048]
     PRIORS:
-        FEATURE_MAPS: [[75, 75], [75, 75], [38, 38], [19, 19], [10, 10], ]
+        FEATURE_MAPS: [[38, 38], [19, 19], [10, 10], ]
 INPUT:
     IMAGE_SIZE: [300, 300]
     PIXEL_STD: [0.229, 0.224, 0.225] 
@@ -15,12 +15,12 @@ DATASETS:
     TRAIN: ("rdd2020_train",)
     TEST: ("rdd2020_val", )
 SOLVER:
-    MAX_ITER: 30000
+    MAX_ITER: 50000
     GAMMA: 0.1
-    BATCH_SIZE: 16
-    LR: 5e-4
+    BATCH_SIZE: 10
+    LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020_resnet'
+OUTPUT_DIR: 'outputs/rdd2020_resnext'
 EVAL_STEP: 2500
 MODEL_SAVE_STEP: 2500
 DATASET_DIR: "/work/datasets/"

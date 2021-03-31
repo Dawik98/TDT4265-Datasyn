@@ -31,17 +31,19 @@ def plot_layer(model, layer, channels, image_path):
 
   # Resize, and normalize the image with the mean and standard deviation
   image_transform = torchvision.transforms.Compose([
-      torchvision.transforms.Resize((224, 224)),
+      torchvision.transforms.Resize((28, 28)),
       torchvision.transforms.ToTensor(),
+      #torchvision.transforms.Grayscale(),
       #torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
   ])
   image = image_transform(image)[None]
   print("Image shape:", image.shape)
 
   activation = get_activations(image, layer, model_layers)
-
-  #activation = first_conv_layer(image)
   print("Activation shape:", activation.shape)
+
+  relu_out = model_layers[1](activation)
+  print("Relu output: ", relu_out.mean(dim=(0,2,3)))
 
   #indices = [14, 26, 32, 49, 52]
   #indices = range(10)

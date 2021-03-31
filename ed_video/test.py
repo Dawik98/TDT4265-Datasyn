@@ -20,6 +20,7 @@ class Model1(nn.Module):
                 num_classes: Number of classes we want to predict (10)
         """
         super().__init__()
+        self.num_classes = num_classes
 
         # conv layer parameters
         f=3
@@ -37,7 +38,6 @@ class Model1(nn.Module):
         num_filters5 = 128
         num_filters6 = 128
 
-        self.num_classes = num_classes
         # Define the convolutional layers
         self.feature_extractor = nn.Sequential(
             nn.Conv2d(image_channels, num_filters1, f, s, p),
@@ -100,6 +100,44 @@ class Model1(nn.Module):
             f"Expected output of forward pass to be: {expected_shape}, but got: {out.shape}"
         return out
 
+class Model2(nn.Module):
+
+    def __init__(self,
+                 image_channels,
+                 num_classes):
+        """
+            Is called when model is initialized.
+            Args:
+                image_channels. Number of color channels in image (1)
+                num_classes: Number of classes we want to predict (10)
+        """
+        super().__init__()
+
+        self.num_classes = num_classes
+        # Define the convolutional layers
+        self.feature_extractor = nn.Sequential(
+            nn.Conv2d(image_channels, 10, 20),
+            nn.ReLU()
+        )
+
+        self.num_output_features = 10*9*9
+
+        num_nodes1 = 256
+
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.BatchNorm1d(self.num_output_features),
+            nn.Linear(self.num_output_features, num_nodes1),
+            nn.ReLU(),
+            nn.BatchNorm1d(num_nodes1),
+            nn.Linear(num_nodes1, self.num_classes)
+        )
+    
+    def forward(self, x):
+        x = self.feature_extractor(x)
+        x = self.classifier(x)
+        return x
+
 def create_plots(trainer: Trainer, name: str):
     plot_path = pathlib.Path("plots")
     plot_path.mkdir(exist_ok=True)
@@ -126,7 +164,7 @@ if __name__ == "__main__":
     learning_rate = 5e-2
     early_stop_count = 4
     dataloaders = load_mnist(batch_size)
-    model = Model1(image_channels=1, num_classes=10)
+    model = Model2(image_channels=1, num_classes=10)
     trainer = Trainer(
         batch_size,
         learning_rate,
@@ -136,15 +174,17 @@ if __name__ == "__main__":
         dataloaders
     )
     train = False
+    #train = True
     if train == True:
         trainer.train()
         trainer.get_final_results()
         create_plots(trainer, "test")
     else:
         trainer.get_final_results()
-        layer = 17
-        channels = [0,1,2]
-        img = 'images/img_5_thin.jpg'
+        layer = 0
+        channels = [0,1,2,3,4,5,6,7,8,9]
+        channels = [x+0 for x in channels]
+        img = 'images/img_5.jpg'
 
         plot_layer(model, layer, channels, img)
 
