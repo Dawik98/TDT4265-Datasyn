@@ -18,7 +18,7 @@ class Model(torch.nn.Module):
         #print(resnext_model)
 
         self.model = nn.Sequential(*(list(resnext_model.children())[:-2]))
-        print(self.model)
+        #print(self.model)
 
         ##freeze all
         #for param in self.model.parameters():
