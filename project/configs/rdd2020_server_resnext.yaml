@@ -1,7 +1,7 @@
 MODEL:
     NUM_CLASSES: 5
     BACKBONE:
-        NAME: 'resnet'
+        NAME: 'resnext'
         PRETRAINED: True
         INPUT_CHANNELS: 3
         OUT_CHANNELS: [512, 1024, 2048]
@@ -20,7 +20,7 @@ SOLVER:
     BATCH_SIZE: 10
     LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020_resnext'
+OUTPUT_DIR: 'outputs/rdd2020_resnext50'
 EVAL_STEP: 2500
 MODEL_SAVE_STEP: 2500
 DATASET_DIR: "/work/datasets/"

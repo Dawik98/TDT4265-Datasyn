@@ -14,7 +14,7 @@ class Model(torch.nn.Module):
         image_channels = cfg.MODEL.BACKBONE.INPUT_CHANNELS
         self.output_feature_shape = cfg.MODEL.PRIORS.FEATURE_MAPS
 
-        resnext_model = resnext(pretrained = False)
+        resnext_model = resnext(pretrained = True)
         #print(resnext_model)
 
         self.model = nn.Sequential(*(list(resnext_model.children())[:-2]))
