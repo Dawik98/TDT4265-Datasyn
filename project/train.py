@@ -35,14 +35,15 @@ def start_train(cfg):
     model = SSDDetector(cfg)
     model = torch_utils.to_cuda(model)
 
-    params_to_update = []
-    print('-'*50)
-    print("Parameters to learn:")
-    for name, param in model.named_parameters():
-        if param.requires_grad == True:
-            params_to_update.append(param)
-            print(name)
-    print('-'*50)
+    # get parameter that will be optimized
+    #params_to_update = []
+    #print('-'*50)
+    #print("Parameters to learn:")
+    #for name, param in model.named_parameters():
+    #    if param.requires_grad == True:
+    #        params_to_update.append(param)
+    #        print(name)
+    #print('-'*50)
 
     #optimizer = torch.optim.SGD(
     #    params_to_update,
