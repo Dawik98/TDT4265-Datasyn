@@ -12,6 +12,7 @@ def build_transforms(cfg, is_train=True):
             Resize(cfg.INPUT.IMAGE_SIZE),
             SubtractMeans(cfg.INPUT.PIXEL_MEAN, cfg.INPUT.PIXEL_STD),
             ToTensor(),
+            RandomMirror(),
             RandomEffect(),
         ]
     else:

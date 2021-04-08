@@ -268,9 +268,12 @@ class RandomMirror(object):
     def __call__(self, image, boxes, classes):
         _, width, _ = image.shape
         if random.randint(2):
-            image = image[:, ::-1]
+            image = transforms.hflip(image)
             boxes = boxes.copy()
-            boxes[:, 0::2] = width - boxes[:, 2::-2]
+            boxes[:, 0::2] = 1 - boxes[:, 2::-2]
+            #image = image[:, ::-1]
+            #boxes = boxes.copy()
+            #boxes[:, 0::2] = width - boxes[:, 2::-2]
         return image, boxes, classes
 
 
