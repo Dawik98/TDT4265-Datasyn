@@ -24,7 +24,8 @@ def do_train(cfg, model,
              data_loader,
              optimizer,
              checkpointer,
-             arguments):
+             arguments,
+             scheduler=None):
     logger = logging.getLogger("SSD.trainer")
     logger.info("Start training ...")
     meters = MetricLogger()
@@ -80,15 +81,18 @@ def do_train(cfg, model,
                 'lr', optimizer.param_groups[0]['lr'],
                 global_step=global_step)
 
-        if iteration % cfg.MODEL_SAVE_STEP == 0:
-            checkpointer.save("model_{:06d}".format(iteration), **arguments)
-
         if cfg.EVAL_STEP > 0 and iteration % cfg.EVAL_STEP == 0:
             eval_results = do_evaluation(cfg, model, iteration=iteration)
             for eval_result, dataset in zip(eval_results, cfg.DATASETS.TEST):
                 write_metric(
                     eval_result['metrics'], 'metrics/' + dataset,summary_writer, iteration)
             model.train()  # *IMPORTANT*: change to train mode after eval.
+
+            mAP = eval_results[0]['metrics']['mAP']
+            if scheduler != None: scheduler.step(mAP)
+
+        if iteration % cfg.MODEL_SAVE_STEP == 0:
+            checkpointer.save("model_{:06d}".format(iteration), **arguments)
 
         if iteration >= cfg.SOLVER.MAX_ITER:
             break

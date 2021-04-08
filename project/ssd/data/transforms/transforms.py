@@ -272,3 +272,34 @@ class RandomMirror(object):
             boxes = boxes.copy()
             boxes[:, 0::2] = width - boxes[:, 2::-2]
         return image, boxes, classes
+
+
+from torchvision.transforms import functional as transforms
+
+class RandomEffect(object):
+    def __call__(self, image, boxes, classes):
+        effects = ['none', 'blur', 'brightness', 'contrast', 'saturation', 'sharpness']
+        effect = random.choice(effects)
+        k = random.choice((-1,1))
+
+        if effect == 'none':
+            pass
+        elif effect == 'blur':
+            factor = 1 + (0.4 * k)
+            image = transforms.gaussian_blur(image,3,factor)
+        elif effect == 'brightness':
+            factor = 1 + (0.4 * k)
+            image = transforms.adjust_brightness(image, factor)
+        elif effect == 'contrast':
+            factor = 1 + (0.2 * k)
+            image = transforms.adjust_contrast(image, factor)
+        elif effect == 'saturation':
+            factor = 1 + (0.3 * k)
+            image = transforms.adjust_saturation(image, factor)
+        elif effect == 'sharpness':
+            factor = 1 + (0.5 * k)
+            image = transforms.adjust_sharpness(image, factor)
+        else:
+            pass
+
+        return image, boxes, classes

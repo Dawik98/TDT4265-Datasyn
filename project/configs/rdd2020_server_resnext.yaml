@@ -17,10 +17,10 @@ DATASETS:
 SOLVER:
     MAX_ITER: 50000
     GAMMA: 0.1
-    BATCH_SIZE: 10
+    BATCH_SIZE: 5
     LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020_resnext50'
-EVAL_STEP: 2500
-MODEL_SAVE_STEP: 2500
+OUTPUT_DIR: 'outputs/rdd2020_resnext50_small_batch'
+EVAL_STEP: 1000
+MODEL_SAVE_STEP: 500
 DATASET_DIR: "/work/datasets/"
