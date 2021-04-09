@@ -36,17 +36,17 @@ def start_train(cfg):
     model = torch_utils.to_cuda(model)
 
     # get parameter that will be optimized
-    params_to_update = []
-    print('-'*50)
-    print("Parameters to learn:")
-    for name, param in model.named_parameters():
-        if param.requires_grad == True:
-            params_to_update.append(param)
-            print(name)
-    print('-'*50)
+    #params_to_update = []
+    #print('-'*50)
+    #print("Parameters to learn:")
+    #for name, param in model.named_parameters():
+    #    if param.requires_grad == True:
+    #        params_to_update.append(param)
+    #        print(name)
+    #print('-'*50)
 
     #optimizer = torch.optim.SGD(
-    #    params_to_update,
+    #    model.parameters(),
     #    lr=cfg.SOLVER.LR,
     #    momentum=cfg.SOLVER.MOMENTUM,
     #    weight_decay=cfg.SOLVER.WEIGHT_DECAY
@@ -63,7 +63,7 @@ def start_train(cfg):
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer,
         mode = 'min',
-        factor = 0.5,
+        factor = 0.1,
         patience = 2
     )
 
@@ -74,6 +74,10 @@ def start_train(cfg):
         )
     extra_checkpoint_data = checkpointer.load()
     arguments.update(extra_checkpoint_data)
+
+    for g in optimizer.param_groups:
+        g['lr'] = cfg.SOLVER.LR
+
 
     max_iter = cfg.SOLVER.MAX_ITER
     train_loader = make_data_loader(cfg, is_train=True, max_iter=max_iter, start_iter=arguments['iteration'])
