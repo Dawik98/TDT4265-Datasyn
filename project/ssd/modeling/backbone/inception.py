@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from torchvision.models import densenet201 as densenet
+from torchvision.models import inception_v3 as inception
 
 
 class Model(torch.nn.Module):
@@ -14,9 +14,10 @@ class Model(torch.nn.Module):
         image_channels = cfg.MODEL.BACKBONE.INPUT_CHANNELS
         self.output_feature_shape = cfg.MODEL.PRIORS.FEATURE_MAPS
 
-        densenet_model = densenet(pretrained = True)
+        inception_model = inception(pretrained = True)
+        #print(inception_model)
 
-        self.model = nn.Sequential(*(list(densenet_model.children())[:-1][0]))
+        self.model = nn.Sequential(*(list(inception_model.children())[:-3]))
         print(self.model)
 
         ##freeze all
@@ -31,13 +32,14 @@ class Model(torch.nn.Module):
     def forward(self, x):
         out_features = []
 
-        x = self.model[:6](x)
-        x = self.model[6:8](x)
-        out_features.append(x)
-        x = self.model[8:10](x)
-        out_features.append(x)
-        x = self.model[10:12](x)
-        out_features.append(x)
+        num_of_blocks = len(self.model)
+        outputs_to_save = [9,13,16,18]
+
+        for block in range(num_of_blocks):
+            x = self.model[block]()
+
+            if block in outputs_to_save:
+                out_features.append(x)
 
         return tuple(out_features)
 
