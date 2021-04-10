@@ -1,7 +1,7 @@
 MODEL:
     NUM_CLASSES: 5
     BACKBONE:
-        NAME: 'densenet'
+        NAME: 'inception'
         PRETRAINED: True
         INPUT_CHANNELS: 3
         OUT_CHANNELS: [256, 896, 1920]
@@ -22,7 +22,7 @@ SOLVER:
     BATCH_SIZE: 10
     LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020_densenet201'
+OUTPUT_DIR: 'outputs/rdd2020_inception_v3'
 EVAL_STEP: 500
 MODEL_SAVE_STEP: 500
 DATASET_DIR: "/work/datasets/"

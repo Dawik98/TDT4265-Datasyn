@@ -4,6 +4,7 @@ MODEL:
         NAME: 'basic90'
         PRETRAINED: False
         INPUT_CHANNELS: 3
+        #OUT_CHANNELS: [256, 256, 256, 512, 512, 1024]
         OUT_CHANNELS: [128, 256, 256, 256, 512, 512]
     PRIORS:
         FEATURE_MAPS: [[38, 38], [19, 19], [10, 10], [5, 5], [3, 3], [1, 1]]
@@ -17,9 +18,9 @@ SOLVER:
     MAX_ITER: 300000
     GAMMA: 0.1
     BATCH_SIZE: 16
-    LR: 5e-4
+    LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020'
+OUTPUT_DIR: 'outputs/rdd2020_basic'
 EVAL_STEP: 2500
 MODEL_SAVE_STEP: 2500
 DATASET_DIR: "/work/datasets/"
