@@ -1,10 +1,12 @@
 MODEL:
     NUM_CLASSES: 11
     BACKBONE:
-        NAME: 'basic90'
+        NAME: 'mynet'
         PRETRAINED: False
-        OUT_CHANNELS: [128, 256, 128, 128, 64, 64]
+        OUT_CHANNELS: [256, 256, 256, 512, 512, 1024]
         INPUT_CHANNELS: 3
+    PRIORS:
+        FEATURE_MAPS: [[38, 38], [19, 19], [10, 10], [5, 5], [3, 3], [1, 1]]
 INPUT:
     IMAGE_SIZE: [300, 300]
 DATASETS:
@@ -15,5 +17,5 @@ SOLVER:
     GAMMA: 0.1
     BATCH_SIZE: 16
     LR: 2e-3
-OUTPUT_DIR: 'outputs/basic90'
+OUTPUT_DIR: 'outputs/mynet'
 DATASET_DIR: "datasets"
