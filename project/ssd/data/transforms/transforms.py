@@ -395,3 +395,26 @@ class RandomEraseEffect(object):
             pass
 
         return image, boxes, classes
+
+
+class RandomEraseTop(object):
+    def __call__(self, image, boxes, classes):
+
+        p = random.uniform()
+        if p > 0.5:
+            return image, boxes, classes
+
+        max_box_height = np.max(boxes[0:2])
+
+        if max_box_height > 0.7:
+            return image, boxes, classes
+        else:
+            _, width, height = image.shape
+
+            h_erase = int(0.3 * height)
+            x = 0
+            y = height
+            
+            image = transforms.erase(image, 0, y, h_erase, width, 0.8)
+
+        return image, boxes, classes

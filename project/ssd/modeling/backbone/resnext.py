@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 from torchvision.models import resnext50_32x4d as resnext
+#from torchvision.models import resnext101_32x8d as resnext
+
 
 
 class Model(torch.nn.Module):
