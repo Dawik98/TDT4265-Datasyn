@@ -16,7 +16,7 @@
             "name": "TDT4265",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/train.py configs/rdd2020_server_resnet.yaml",
+            "program": "${workspaceFolder}/project/train.py configs/rdd2020_server_resnet.yaml",
             "console": "integratedTerminal"
         }
     ]

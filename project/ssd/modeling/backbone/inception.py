@@ -14,7 +14,7 @@ class Model(torch.nn.Module):
         image_channels = cfg.MODEL.BACKBONE.INPUT_CHANNELS
         self.output_feature_shape = cfg.MODEL.PRIORS.FEATURE_MAPS
 
-        inception_model = inception(pretrained = True)
+        inception_model = inception(pretrained = True, aux_logits=False)
         #print(inception_model)
 
         self.model = nn.Sequential(*(list(inception_model.children())[:-3]))
@@ -33,10 +33,10 @@ class Model(torch.nn.Module):
         out_features = []
 
         num_of_blocks = len(self.model)
-        outputs_to_save = [9,13,16,18]
+        outputs_to_save = [9,13,15,16,17]
 
         for block in range(num_of_blocks):
-            x = self.model[block]()
+            x = self.model[block](x)
 
             if block in outputs_to_save:
                 out_features.append(x)
