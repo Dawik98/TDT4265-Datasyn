@@ -20,7 +20,7 @@ SOLVER:
     BATCH_SIZE: 16
     LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020_basic'
+OUTPUT_DIR: 'outputs/rdd2020_basic90'
 EVAL_STEP: 2500
 MODEL_SAVE_STEP: 2500
 DATASET_DIR: "/work/datasets/"

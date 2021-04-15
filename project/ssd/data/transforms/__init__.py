@@ -14,12 +14,13 @@ def build_transforms(cfg, is_train=True):
             ToTensor(),
             RandomMirror(),
             RandomEffect(),
+            RandomAreaErasing()
         ]
     else:
         transform = [
             Resize(cfg.INPUT.IMAGE_SIZE),
             SubtractMeans(cfg.INPUT.PIXEL_MEAN, cfg.INPUT.PIXEL_STD),
-            ToTensor()
+            ToTensor(),
         ]
     transform = Compose(transform)
     return transform

@@ -56,15 +56,15 @@ def start_train(cfg):
         model.parameters(),
         lr=cfg.SOLVER.LR,
         #momentum=cfg.SOLVER.MOMENTUM,
-        weight_decay=cfg.SOLVER.WEIGHT_DECAY,
+        #weight_decay=cfg.SOLVER.WEIGHT_DECAY,
         amsgrad=True
     )
 
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer,
         mode = 'min',
-        factor = 0.1,
-        patience = 2
+        factor = 0.5,
+        patience = 5
     )
 
     arguments = {"iteration": 0}
@@ -75,9 +75,8 @@ def start_train(cfg):
     extra_checkpoint_data = checkpointer.load()
     arguments.update(extra_checkpoint_data)
 
-    for g in optimizer.param_groups:
-        g['lr'] = cfg.SOLVER.LR
-
+    #for g in optimizer.param_groups:
+    #    g['lr'] = cfg.SOLVER.LR
 
     max_iter = cfg.SOLVER.MAX_ITER
     train_loader = make_data_loader(cfg, is_train=True, max_iter=max_iter, start_iter=arguments['iteration'])
