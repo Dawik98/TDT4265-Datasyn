@@ -2,8 +2,10 @@
 import torch
 import cv2
 import numpy as np
+import math
 from numpy import random
-
+from torchvision.transforms import functional as transforms
+import torchvision
 
 def intersect(box_a, box_b):
     max_xy = np.minimum(box_a[:, 2:], box_b[2:])
@@ -277,7 +279,6 @@ class RandomMirror(object):
         return image, boxes, classes
 
 
-from torchvision.transforms import functional as transforms
 
 class RandomEffect(object):
     def __call__(self, image, boxes, classes):
@@ -288,20 +289,108 @@ class RandomEffect(object):
         if effect == 'none':
             pass
         elif effect == 'blur':
-            factor = 1 + (0.4 * k)
+            factor = 1 + (0.9)
             image = transforms.gaussian_blur(image,3,factor)
         elif effect == 'brightness':
-            factor = 1 + (0.4 * k)
+            factor = 1 + (0.5 * k)
             image = transforms.adjust_brightness(image, factor)
         elif effect == 'contrast':
-            factor = 1 + (0.2 * k)
+            factor = 1 + (0.5 * k)
             image = transforms.adjust_contrast(image, factor)
         elif effect == 'saturation':
-            factor = 1 + (0.3 * k)
+            factor = 1 + (0.5 * k)
             image = transforms.adjust_saturation(image, factor)
         elif effect == 'sharpness':
             factor = 1 + (0.5 * k)
             image = transforms.adjust_sharpness(image, factor)
+        elif effect == 'autocontrast':
+            image = transforms.autocontrast(image)
+        #elif effect == 'hue':
+        #    factor = random.uniform(-0.5, 0.5) 
+        #    image = transforms.adjust_hue(image, factor)
+        else:
+            pass
+
+        return image, boxes, classes
+
+
+class PreTransform(object):
+    def __call__(self, image, boxes, classes):
+        image = transforms.rgb_to_grayscale(image, 3)
+        image = transforms.adjust_contrast(image, 1.5)
+        return image, boxes, classes
+
+
+
+class RandomAreaErasing(object):
+    def __init__(self, p_erase=0.08, n_areas=100):
+        self.p_erase = p_erase #max precent of pixels to erase
+        self.n_areas = n_areas
+
+    def __call__(self, image, boxes, classes):
+        scale_max = self.p_erase / self.n_areas
+        scale_min = scale_max / 2    
+        
+        fun = torchvision.transforms.RandomErasing(p=1, scale=(scale_min, scale_max), value=0.8)
+
+        for i in range(self.n_areas):
+            image = fun(image)
+
+        return image, boxes, classes
+
+
+class RandomPixelErasing(object):
+    def __init__(self, p_erase=0.05):
+        self.p_erase = p_erase #precent of pixels to erase
+
+    def __call__(self, image, boxes, classes):
+        d,w,h = image.shape
+        pixels_total = h*w
+        pixels_erased = int(pixels_total*self.p_erase)
+        pixel_heights = np.random.randint(0, h, pixels_erased)
+        pixel_widths = np.random.randint(0, w, pixels_erased)
+
+        for x,y in zip(pixel_widths, pixel_heights):
+            image[:,y,x] = 0.8
+
+        return image, boxes, classes
+
+class RandomStripeErasing(object):
+    def __init__(self, p_erase=0.05):
+        self.p_erase = p_erase #precent of pixels to erase
+
+    def __call__(self, image, boxes, classes):
+        d,w,h = image.shape
+        orientation = random.choice(('w','h'))
+
+        if orientation == 'h':
+            pixels_erased = int(h*self.p_erase)
+            pixels = np.random.randint(0, h, pixels_erased)
+            for pixel in pixels:
+                image[:,pixel,:] = 0
+
+        if orientation == 'w':
+            pixels_erased = int(w*self.p_erase)
+            pixels = np.random.randint(0, w, pixels_erased)
+            for pixel in pixels:
+                image[:,:,pixel] = 0
+
+        return image, boxes, classes
+
+class RandomEraseEffect(object):
+    def __call__(self, image, boxes, classes):
+        effects = ['none', 'erase_area']
+        effect = random.choice(effects)
+
+        if effect == 'erase_area':
+            fun = RandomAreaErasing()
+            image, boxes, classes = fun(image, boxes, classes)
+        #elif effect == 'erase_pixels':
+        #    fun = RandomPixelErasing()
+        #    image, boxes, classes = fun(image, boxes, classes)
+        #elif effect == 'erase_stripe':
+        #    fun = RandomStripeErasing()
+        #    image, boxes, classes = fun(image, boxes, classes)
         else:
             pass
 
