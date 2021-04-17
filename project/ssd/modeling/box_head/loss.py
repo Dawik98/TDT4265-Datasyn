@@ -2,6 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from ssd.utils import box_utils
+from ssd.torch_utils import to_cuda
 
 
 class MultiBoxLoss(nn.Module):
@@ -30,7 +31,8 @@ class MultiBoxLoss(nn.Module):
             mask = box_utils.hard_negative_mining(loss, labels, self.neg_pos_ratio)
 
         confidence = confidence[mask, :]
-        classification_loss = F.cross_entropy(confidence.view(-1, num_classes), labels[mask], reduction='sum')
+        weights = to_cuda(torch.tensor([1.0, 2.0, 6.0, 1.0, 2.0]))
+        classification_loss = F.cross_entropy(confidence.view(-1, num_classes), labels[mask], weight=weights, reduction='sum')
 
         pos_mask = labels > 0
         predicted_locations = predicted_locations[pos_mask, :].view(-1, 4)
