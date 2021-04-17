@@ -321,7 +321,6 @@ class PreTransform(object):
         return image, boxes, classes
 
 
-
 class RandomAreaErasing(object):
     def __init__(self, p_erase=0.08, n_areas=100):
         self.p_erase = p_erase #max precent of pixels to erase
