@@ -4,10 +4,9 @@ MODEL:
         NAME: 'inception'
         PRETRAINED: True
         INPUT_CHANNELS: 3
-        OUT_CHANNELS: [256, 896, 1920]
+        OUT_CHANNELS: [288, 768, 1280, 2048, 2048]
     PRIORS:        
-        FEATURE_MAPS: [[18, 18], [9, 9], [9, 9],] #300x300
-        #FEATURE_MAPS: [[60, 80], [30, 40], [15, 20], [15, 20],] #640x480
+        FEATURE_MAPS: [[35, 35], [17, 17], [8, 8], [8, 8], [8, 8],] #300x300
 INPUT:
     IMAGE_SIZE: [300, 300]
     #IMAGE_SIZE: [640, 480]
