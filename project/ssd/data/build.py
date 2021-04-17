@@ -25,6 +25,69 @@ class BatchCollator:
             targets = None
         return images, targets, img_ids
 
+def analyze_dataset(dataset):
+    import numpy as np
+    from matplotlib import pyplot as plt
+
+    n = 0
+    n_classes = [0,0,0,0,0]
+    mean = 0.0
+    std = 0.0
+
+    img_size = 300
+    x_corners = np.zeros(img_size, dtype=int)
+    y_corners = np.zeros(img_size, dtype=int)
+
+    box_widths = np.zeros(img_size, dtype=int)
+    box_heights = np.zeros(img_size, dtype=int)
+
+    for img in dataset:
+        mean += torch.mean(img[0], (1,2))
+        std += torch.std(img[0], (1,2))
+
+        #count labels
+        for l in img[1]['labels']:
+            n_classes[l] += 1
+
+        #box position distribution
+        for box in img[1]['boxes']:
+            x1 = int(box[0]*img_size)
+            x2 = int(box[1]*img_size)
+            y1 = int(box[2]*img_size)
+            y2 = int(box[3]*img_size)
+
+            box_w = x2-x1
+            box_h = y2-y1
+
+            x_corners[x1] += 1
+            x_corners[x2] += 1
+            y_corners[y1] += 1
+            y_corners[y2] += 1
+
+            box_widths[box_w] += 1
+            box_heights[box_h] += 1
+
+        n += 1
+
+
+    x_axis = np.linspace(0,img_size,img_size)
+
+    plt.plot(x_axis, x_corners, label='x_coords')
+    plt.plot(x_axis, y_corners, label='y_coords')
+    plt.show()
+
+    plt.plot(x_axis, box_widths, label='box_widths')
+    plt.plot(x_axis, box_heights, label='box_heights')
+    plt.show()
+
+    mean /= n
+    std /= n
+
+    print("Dataset summary:")
+    print("Data mean: {}".format(mean))
+    print("Data std: {}".format(std))
+    print("Classes: {}".format(n_classes))
+
 
 def make_data_loader(cfg, is_train=True, max_iter=None, start_iter=0):
     train_transform = build_transforms(cfg, is_train=is_train)
@@ -34,6 +97,8 @@ def make_data_loader(cfg, is_train=True, max_iter=None, start_iter=0):
         cfg.DATASET_DIR,
         dataset_list, transform=train_transform,
         target_transform=target_transform, is_train=is_train)
+
+    #analyze_dataset(datasets[0])
 
     shuffle = is_train
 

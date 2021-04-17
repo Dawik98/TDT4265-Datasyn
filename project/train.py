@@ -52,7 +52,7 @@ def start_train(cfg):
     #    weight_decay=cfg.SOLVER.WEIGHT_DECAY
     #)
 
-    optimizer = torch.optim.AdamW(
+    optimizer = torch.optim.Adam(
         model.parameters(),
         lr=cfg.SOLVER.LR,
         #momentum=cfg.SOLVER.MOMENTUM,
@@ -83,7 +83,7 @@ def start_train(cfg):
 
     model = do_train(
         cfg, model, train_loader, optimizer,
-        checkpointer, arguments, scheduler)
+        checkpointer, arguments)#, scheduler)
     return model
 
 
