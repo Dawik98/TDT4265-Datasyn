@@ -401,7 +401,7 @@ class RandomEraseTop(object):
     def __call__(self, image, boxes, classes):
 
         p = random.uniform()
-        if p > 0.5:
+        if p > 0.3:
             return image, boxes, classes
 
         max_box_height = np.max(boxes[0:2])

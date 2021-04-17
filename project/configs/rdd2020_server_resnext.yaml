@@ -20,7 +20,7 @@ SOLVER:
     BATCH_SIZE: 10
     LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020_resnext50_loss_weight'
+OUTPUT_DIR: 'outputs/rdd2020_resnext50_erase_top'
 EVAL_STEP: 1000
 MODEL_SAVE_STEP: 5000
 DATASET_DIR: "/work/datasets/"
