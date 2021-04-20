@@ -14,8 +14,8 @@ def build_transforms(cfg, is_train=True):
             ToTensor(),
             RandomMirror(),
             RandomEffect(),
-            RandomAreaErasing(),
-            RandomEraseTop()
+            #RandomAreaErasing(),
+            #RandomEraseTop()
         ]
     else:
         transform = [

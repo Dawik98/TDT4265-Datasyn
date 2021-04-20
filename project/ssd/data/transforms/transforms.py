@@ -282,29 +282,24 @@ class RandomMirror(object):
 
 class RandomEffect(object):
     def __call__(self, image, boxes, classes):
-        effects = ['none', 'blur', 'brightness', 'contrast', 'saturation', 'sharpness']
+        effects = ['none', 'brightness', 'contrast', 'saturation']
         effect = random.choice(effects)
         k = random.choice((-1,1))
 
         if effect == 'none':
             pass
-        elif effect == 'blur':
-            factor = 1 + (0.9)
-            image = transforms.gaussian_blur(image,3,factor)
         elif effect == 'brightness':
-            factor = 1 + (0.5 * k)
+            factor = 1 + (0.2 * k)
             image = transforms.adjust_brightness(image, factor)
         elif effect == 'contrast':
-            factor = 1 + (0.5 * k)
+            factor = 1 + (0.3 * k)
             image = transforms.adjust_contrast(image, factor)
         elif effect == 'saturation':
-            factor = 1 + (0.5 * k)
+            factor = 1 + (0.4 * k)
             image = transforms.adjust_saturation(image, factor)
-        elif effect == 'sharpness':
-            factor = 1 + (0.5 * k)
-            image = transforms.adjust_sharpness(image, factor)
-        elif effect == 'autocontrast':
-            image = transforms.autocontrast(image)
+        #elif effect == 'sharpness':
+        #    factor = 1 + (0.3 * k)
+        #    image = transforms.adjust_sharpness(image, factor)
         #elif effect == 'hue':
         #    factor = random.uniform(-0.5, 0.5) 
         #    image = transforms.adjust_hue(image, factor)

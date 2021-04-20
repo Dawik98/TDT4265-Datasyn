@@ -19,7 +19,7 @@ class Model(torch.nn.Module):
         #print(resnext_model)
 
         self.model = nn.Sequential(*(list(resnext_model.children())[:-2]))
-        self.model[0] = nn.Conv2d(image_channels, 64, kernel_size=3, stride=2, padding=2, dilation=2, bias=False)
+        self.model[0] = nn.Conv2d(image_channels, 64, kernel_size=3, stride=2, padding=2, bias=False)
 
 
         print(self.model)
