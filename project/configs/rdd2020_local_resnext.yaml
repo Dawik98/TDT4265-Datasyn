@@ -1,14 +1,15 @@
 MODEL:
     NUM_CLASSES: 5
     BACKBONE:
-        NAME: 'resnext_edited'
+        NAME: 'resnext'
         PRETRAINED: False
         INPUT_CHANNELS: 3
         OUT_CHANNELS: [512, 1024, 2048]
     PRIORS:
-        FEATURE_MAPS: [[75, 75], [38, 38], [19, 19], ]
+        FEATURE_MAPS: [[38, 38], [19, 19], [10, 10], ]
+        #FEATURE_MAPS: [[63, 63], [32, 32], [16, 16], ] #in 500x500
 INPUT:
-    IMAGE_SIZE: [600, 600]
+    IMAGE_SIZE: [300, 300]
     PIXEL_STD: [0.229, 0.224, 0.225] 
     PIXEL_MEAN: [0.485, 0.456, 0.406]
 DATASETS:
@@ -17,10 +18,10 @@ DATASETS:
 SOLVER:
     MAX_ITER: 50000
     GAMMA: 0.1
-    BATCH_SIZE: 8
+    BATCH_SIZE: 10
     LR: 1e-4
   
-OUTPUT_DIR: 'outputs/rdd2020_resnext50_bigger_input'
+OUTPUT_DIR: 'outputs/rdd2020_resnext50_test'
 EVAL_STEP: 1000
 MODEL_SAVE_STEP: 5000
 DATASET_DIR: "datasets/"

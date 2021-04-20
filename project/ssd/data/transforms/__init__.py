@@ -8,11 +8,13 @@ def build_transforms(cfg, is_train=True):
     if is_train:
         transform = [
             ConvertFromInts(),
+            RandomRotate(2, 0.3),
             ToPercentCoords(),
             Resize(cfg.INPUT.IMAGE_SIZE),
             SubtractMeans(cfg.INPUT.PIXEL_MEAN, cfg.INPUT.PIXEL_STD),
             ToTensor(),
-            #RandomMirror(),
+            RandomMirror(),
+            RandomSampleCrop(),
             #RandomEffect(),
             #RandomAreaErasing()
         ]
