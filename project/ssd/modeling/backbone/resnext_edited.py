@@ -25,47 +25,7 @@ class Model(torch.nn.Module):
         #self.block0 = nn.Sequential(*(list(vgg.features.children())[:4]))
 
         self.model = nn.Sequential(*(list(resnext_model.children())[:-2]))
-
-        ## block 4
-        #self.model[4][0].conv2.dilation = (2, 2)
-        #self.model[4][0].conv2.padding = (2, 2)
-        #self.model[4][1].conv2.dilation = (2, 2)
-        #self.model[4][1].conv2.padding = (2, 2)
-        #self.model[4][2].conv2.dilation = (2, 2)
-        #self.model[4][2].conv2.padding = (2, 2)
-
-        # block 5
-        self.model[5][0].conv2.dilation = (2, 2)
-        self.model[5][0].conv2.padding = (2, 2)
-        self.model[5][1].conv2.dilation = (2, 2)
-        self.model[5][1].conv2.padding = (2, 2)
-        self.model[5][2].conv2.dilation = (2, 2)
-        self.model[5][2].conv2.padding = (2, 2)
-        self.model[5][3].conv2.dilation = (2, 2)
-        self.model[5][3].conv2.padding = (2, 2)
-
-        # block 6
-        self.model[6][0].conv2.dilation = (2, 2)
-        self.model[6][0].conv2.padding = (2, 2)
-        self.model[6][1].conv2.dilation = (2, 2)
-        self.model[6][1].conv2.padding = (2, 2)
-        self.model[6][2].conv2.dilation = (2, 2)
-        self.model[6][2].conv2.padding = (2, 2)
-        self.model[6][3].conv2.dilation = (2, 2)
-        self.model[6][3].conv2.padding = (2, 2)
-        self.model[6][4].conv2.dilation = (2, 2)
-        self.model[6][4].conv2.padding = (2, 2)
-        self.model[6][5].conv2.dilation = (2, 2)
-        self.model[6][5].conv2.padding = (2, 2)
-
-        # block 7
-        self.model[7][0].conv2.dilation = (2, 2)
-        self.model[7][0].conv2.padding = (2, 2)
-        self.model[7][1].conv2.dilation = (2, 2)
-        self.model[7][1].conv2.padding = (2, 2)
-        self.model[7][2].conv2.dilation = (2, 2)
-        self.model[7][2].conv2.padding = (2, 2)
-
+        self.model[0] = nn.Conv2d(image_channels, 64, kernel_size=3, stride=2, padding=2, bias=False)
 
 
         print(self.model)

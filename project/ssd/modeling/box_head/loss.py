@@ -32,8 +32,9 @@ class MultiBoxLoss(nn.Module):
 
         confidence = confidence[mask, :]
 
-        k = 0.4
+        k = 0.32
         weights = to_cuda(torch.tensor([1, k/0.27, k/0.15, k/0.32, k/0.27]))
+        #weights = to_cuda(torch.tensor([1.0, 1.0, 3.0, 1.0, 1.0]))
         classification_loss = F.cross_entropy(confidence.view(-1, num_classes), labels[mask], weight=weights, reduction='sum')
 
         pos_mask = labels > 0
