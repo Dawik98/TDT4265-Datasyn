@@ -34,12 +34,14 @@ def analyze_dataset(dataset):
     mean = 0.0
     std = 0.0
 
-    img_size = 300
+    img_size = max(360,645)
     x_corners = np.zeros(img_size, dtype=int)
     y_corners = np.zeros(img_size, dtype=int)
 
     box_widths = np.zeros(img_size, dtype=int)
     box_heights = np.zeros(img_size, dtype=int)
+
+    aspect_ratios = np.zeros(12, dtype=int)
 
     for img in dataset:
         mean += torch.mean(img[0], (1,2))
@@ -51,13 +53,25 @@ def analyze_dataset(dataset):
 
         #box position distribution
         for box in img[1]['boxes']:
-            x1 = int(box[0]*img_size)
-            x2 = int(box[1]*img_size)
-            y1 = int(box[2]*img_size)
-            y2 = int(box[3]*img_size)
+            x1 = int(box[0]*640)
+            x2 = int(box[2]*640)
+            y1 = int(box[1]*360)
+            y2 = int(box[3]*360)
 
-            box_w = x2-x1
-            box_h = y2-y1
+            box_w = abs(x2-x1)
+            box_h = abs(y2-y1)
+
+            if box_h == 0 or box_w == 0:
+                continue
+
+            ratio = box_w / box_h
+            if ratio < 1:
+                ratio = 1/ratio
+            if abs(ratio) > 10:
+                ratio = 10.0
+            if ratio < 0:
+                ratio = -ratio
+            aspect_ratios[int(ratio)] += 1
 
             x_corners[x1] += 1
             x_corners[x2] += 1
@@ -80,6 +94,9 @@ def analyze_dataset(dataset):
     plt.plot(x_axis, box_heights, label='box_heights')
     plt.show()
 
+    plt.plot([1,2,3,4,5,6,7,8,9,10,11,12], aspect_ratios, label='box_widths')
+    plt.show()
+
     mean /= n
     std /= n
 
@@ -95,10 +112,10 @@ def make_data_loader(cfg, is_train=True, max_iter=None, start_iter=0):
     dataset_list = cfg.DATASETS.TRAIN if is_train else cfg.DATASETS.TEST
     datasets = build_dataset(
         cfg.DATASET_DIR,
-        dataset_list, transform=train_transform,
-        target_transform=target_transform, is_train=is_train)
+        dataset_list, transform=train_transform)#,
+        #target_transform=target_transform, is_train=is_train)
 
-    #analyze_dataset(datasets[0])
+    analyze_dataset(datasets[0])
 
     shuffle = is_train
 
