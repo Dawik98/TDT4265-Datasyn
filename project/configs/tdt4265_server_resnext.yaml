@@ -30,7 +30,7 @@ SOLVER:
     BATCH_SIZE: 10
     LR: 5e-5
   
-OUTPUT_DIR: 'outputs/tdt4265_resnext50_loss_transfer_learn'
+OUTPUT_DIR: 'outputs/tdt4265_resnext50_prioris_transfer_learn'
 EVAL_STEP: 2500
 MODEL_SAVE_STEP: 2500
 DATASET_DIR: "datasets/"
