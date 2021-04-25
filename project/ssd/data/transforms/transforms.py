@@ -311,15 +311,76 @@ class RandomEffect(object):
         return image, boxes, classes
 
 
-class PreTransform(object):
-    def __call__(self, image, boxes, classes):
-        image = transforms.rgb_to_grayscale(image, 3)
-        image = transforms.adjust_contrast(image, 1.5)
-        return image, boxes, classes
+class RandomRotate(object):
+    """Rotates an image    
+    https://github.com/Paperspace/DataAugmentationForObjectDetection/blob/master/data_aug/data_aug.py
+    
+    Bounding boxes which have an area of less than 25% in the remaining in the 
+    transformed image is dropped. The resolution is maintained, and the remaining
+    area if any is filled by black color.
+    
+    Parameters
+    ----------
+    angle: float
+        The angle by which the image is to be rotated 
+        
+        
+    Returns
+    -------
+    
+    numpy.ndaaray
+        Rotated image in the numpy format of shape `HxWxC`
+    
+    numpy.ndarray
+        Tranformed bounding box co-ordinates of the format `n x 4` where n is 
+        number of bounding boxes and 4 represents `x1,y1,x2,y2` of the box
+        
+    """
+
+    def __init__(self, angle, rotate_p):
+        self.angle = angle
+        self.rotate_p = rotate_p
+        
+
+    def __call__(self, img, bboxes, classes):
+        """
+        Args:
+            img (PIL Image): Image to be rotated.
+        Returns:
+            PIL Image: Randomly rotated image.
+        """
+
+        if random.uniform() > self.rotate_p:
+            return img, bboxes, classes
+        
+        w,h = img.shape[1], img.shape[0]
+        cx, cy = w//2, h//2
+        
+        corners = get_corners(bboxes)
+        corners = np.hstack((corners, bboxes[:,4:]))
+
+        img = rotate_im(img, self.angle)
+        
+        corners[:,:8] = rotate_box(corners[:,:8], self.angle, cx, cy, h, w)
+        
+        new_bbox = get_enclosing_box(corners)
+        
+        scale_factor_x = img.shape[1] / w
+        scale_factor_y = img.shape[0] / h
+        
+        img = cv2.resize(img, (w,h))
+        new_bbox[:,:4] /= [scale_factor_x, scale_factor_y, scale_factor_x, scale_factor_y] 
+        
+        
+        bboxes  = new_bbox
+        bboxes = clip_box(bboxes, [0,0,w, h], 0.25)
+
+        return img, bboxes, classes
+
 
 
 class RandomAreaErasing(object):
-    def __init__(self, p_erase=0.08, n_areas=100):
+    def __init__(self, p_erase=0.05, n_areas=100):
         self.p_erase = p_erase #max precent of pixels to erase
         self.n_areas = n_areas
 
@@ -327,7 +388,7 @@ class RandomAreaErasing(object):
         scale_max = self.p_erase / self.n_areas
         scale_min = scale_max / 2    
         
-        fun = torchvision.transforms.RandomErasing(p=1, scale=(scale_min, scale_max), value=0.8)
+        fun = torchvision.transforms.RandomErasing(p=0.5, scale=(scale_min, scale_max), value=0.8)
 
         for i in range(self.n_areas):
             image = fun(image)
