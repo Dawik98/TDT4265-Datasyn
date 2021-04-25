@@ -75,8 +75,8 @@ def start_train(cfg):
     extra_checkpoint_data = checkpointer.load()
     arguments.update(extra_checkpoint_data)
 
-    #for g in optimizer.param_groups:
-    #    g['lr'] = cfg.SOLVER.LR
+    for g in optimizer.param_groups:
+        g['lr'] = cfg.SOLVER.LR
 
     max_iter = cfg.SOLVER.MAX_ITER
     train_loader = make_data_loader(cfg, is_train=True, max_iter=max_iter, start_iter=arguments['iteration'])

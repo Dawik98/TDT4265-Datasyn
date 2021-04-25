@@ -26,8 +26,8 @@ class Model(torch.nn.Module):
         #for param in self.model.parameters():
         #    param.requires_grad = False
         ## unfreeze some
-        #for param in self.model[-3:].parameters():
-        #    param.requires_grad = True
+        #for param in self.model[:5].parameters():
+        #    param.requires_grad = False
 
 
 

@@ -147,7 +147,7 @@ class RandomSampleCrop(object):
     """
 
     def __init__(self):
-        self.sample_options = (
+        self.sample_options = np.array((
             # using entire original input image
             None,
             # sample a patch s.t. MIN jaccard w/ obj in .1,.3,.4,.7,.9
@@ -157,7 +157,7 @@ class RandomSampleCrop(object):
             (0.9, None),
             # randomly sample a patch
             (None, None),
-        )
+        ), dtype="object")
 
     def __call__(self, image, boxes=None, labels=None):
         # guard against no boxes
@@ -284,20 +284,20 @@ class RandomMirror(object):
 
 class RandomEffect(object):
     def __call__(self, image, boxes, classes):
-        effects = ['none', 'brightness', 'contrast', 'saturation']
+        effects = ['none', 'none', 'brightness', 'contrast', 'saturation']
         effect = random.choice(effects)
         k = random.choice((-1,1))
 
         if effect == 'none':
             pass
         elif effect == 'brightness':
-            factor = 1 + (0.2 * k)
+            factor = 1 + (0.1 * k)
             image = transforms.adjust_brightness(image, factor)
         elif effect == 'contrast':
-            factor = 1 + (0.3 * k)
+            factor = 1 + (0.1 * k)
             image = transforms.adjust_contrast(image, factor)
         elif effect == 'saturation':
-            factor = 1 + (0.4 * k)
+            factor = 1 + (0.1 * k)
             image = transforms.adjust_saturation(image, factor)
         #elif effect == 'sharpness':
         #    factor = 1 + (0.3 * k)
@@ -336,10 +336,11 @@ class RandomAreaErasing(object):
 
 
 class RandomPixelErasing(object):
-    def __init__(self, p_erase=0.05):
+    def __init__(self, p_erase=0.02):
         self.p_erase = p_erase #precent of pixels to erase
 
     def __call__(self, image, boxes, classes):
+        self.p_erase = random.choice((self.p_erase, self.p_erase/2, 0, 0))
         d,w,h = image.shape
         pixels_total = h*w
         pixels_erased = int(pixels_total*self.p_erase)
@@ -347,7 +348,7 @@ class RandomPixelErasing(object):
         pixel_widths = np.random.randint(0, w, pixels_erased)
 
         for x,y in zip(pixel_widths, pixel_heights):
-            image[:,y,x] = 0.8
+            image[:,y,x] = 0.0
 
         return image, boxes, classes
 
