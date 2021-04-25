@@ -112,10 +112,10 @@ def make_data_loader(cfg, is_train=True, max_iter=None, start_iter=0):
     dataset_list = cfg.DATASETS.TRAIN if is_train else cfg.DATASETS.TEST
     datasets = build_dataset(
         cfg.DATASET_DIR,
-        dataset_list, transform=train_transform)#,
-        #target_transform=target_transform, is_train=is_train)
+        dataset_list, transform=train_transform,
+        target_transform=target_transform, is_train=is_train)
 
-    analyze_dataset(datasets[0])
+    #analyze_dataset(datasets[0]) #uncomment to get info about dataset (remember to remove transforms)
 
     shuffle = is_train
 
