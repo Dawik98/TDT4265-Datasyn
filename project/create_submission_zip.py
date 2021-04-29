@@ -4,14 +4,16 @@ import pathlib
 
 # If you create other files, edit this list to include them in the .zip file.
 directories_to_include = [
-    "task2",
-    "SSD"
+    #"ssd",
+    #"configs",
+    #"outputs",
+    "./"
 ]
 extensions_to_include = [
     ".py",
-    ".json",
+#    ".json",
     ".yaml",
-    ".ipynb"
+    ".ipynb",
 ]
 zipfile_path = "assignment_code.zip"
 print("-"*80)
